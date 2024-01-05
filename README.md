@@ -1,6 +1,8 @@
 # thunk-ts
 
-> A set of data structures in TypeScript which utilizes lazy evaluation
+> A set of data structures in TypeScript which utilizes lazy evaluation (w/o 3rd party dependencies!)
+
+`thunk-ts` emulates lazy evaluation simply by wrapping expressions into a function.
 
 ## Installation
 
@@ -10,9 +12,7 @@ npm i thunk-ts -D
 
 ## API
 
-### Key Feature
-
-`thunk-ts` emulates lazy evaluation simply by wrapping expressions into a function.
+TODO
 
 ## About Naming
 
