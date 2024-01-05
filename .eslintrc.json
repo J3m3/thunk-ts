@@ -1,0 +1,21 @@
+{
+  "root": true,
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": ["dist", "*.config.(js|ts)"],
+  "overrides": [
+    {
+      "files": "test/**/*",
+      "plugins": ["jest"],
+      "extends": ["plugin:jest/recommended"],
+      "env": {
+        "jest/globals": true
+      }
+    }
+  ]
+}
