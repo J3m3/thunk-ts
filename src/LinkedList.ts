@@ -122,4 +122,12 @@ const printList = <T>(xs: LazyList<T>) => {
 // );
 console.log(unsafeToArray(fromArray([1, 2, 3, 4])));
 
-export { type LazyList, fromArray, unsafeToArray, range, $range };
+export {
+  type LazyList,
+  fromArray,
+  unsafeToArray,
+  _unsafeToArray,
+  range,
+  $range,
+  printList,
+};
