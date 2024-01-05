@@ -10,13 +10,18 @@ npm i thunk-ts -D
 
 ## API
 
-TODO
+### Key Feature
+
+`thunk-ts` emulates lazy evaluation simply by wrapping expressions into a function.
 
 ## About Naming
 
 ### Package
 
-A [`thunk`](https://wiki.haskell.org/Thunk) is a term used in haskell, which denotes value that is yet to be evaluated.
+A [`thunk`](https://wiki.haskell.org/Thunk) is a term used in Haskell, which denotes value that is yet to be evaluated.
+
+> [!IMPORTANT]
+> `thunk-ts` does not strictly emulates `thunk` in Haskell. Haskell evaluates expressions up to [WHNF (Weak Head Normal Form)](https://wiki.haskell.org/Weak_head_normal_form).
 
 ### Functions
 
