@@ -4,13 +4,12 @@ import * as LL from "../src/LinkedList";
 
 expect.addEqualityTesters([]);
 
-it("should maintain consistency when converting from array to linked list and back", () => {
-  expect(LL.unsafeToArray(LL.fromArray([1, 2, 3]))).toEqual([1, 2, 3]);
-});
-
 describe("fromArray:", () => {
   it("should generate Thunk<null> when an empty array is given", () => {
     expect(LL.fromArray([])()).toEqual(null);
+  });
+  it("should maintain consistency when converting from array to linked list and back", () => {
+    expect(LL.unsafeToArray(LL.fromArray([1, 2, 3]))).toEqual([1, 2, 3]);
   });
 });
 
