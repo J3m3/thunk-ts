@@ -108,19 +108,30 @@ const printList = <T>(xs: LazyList<T>) => {
   }
 };
 
-// const take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {};
-
-// const isEqual = <T>(xs: LazyList<T>, ys: LazyList<T>): boolean => {};
-
-// printList(infRange(toThunk(1)));
-// printList($infRange(1));
-// printList(
-//   range(
-//     () => 1,
-//     () => 1000000000,
-//   ),
-// );
-console.log(unsafeToArray(fromArray([1, 2, 3, 4])));
+const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
+  return () => {
+    const node = xs();
+    if (node === null || n <= 0) {
+      return null;
+    }
+    return {
+      head: node.head,
+      rest: $take(n - 1, node.rest),
+    };
+  };
+};
+const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
+  return () => {
+    const node = xs();
+    if (node === null || n() <= 0) {
+      return null;
+    }
+    return {
+      head: node.head,
+      rest: take(() => n() - 1, node.rest),
+    };
+  };
+};
 
 export {
   type LazyList,
@@ -130,4 +141,6 @@ export {
   range,
   $range,
   printList,
+  $take,
+  take,
 };
