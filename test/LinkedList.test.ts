@@ -16,12 +16,24 @@ describe("fromArray:", () => {
 
 describe("range:", () => {
   it("should generate a properly bounded `[)` lazy list", () => {
-    expect(LL.unsafeToArray(LL.range(toThunk(3), toThunk(7)))).toEqual([3, 4, 5, 6]);
+    const xs = LL.range(toThunk(3), toThunk(7));
+    const result = [3, 4, 5, 6];
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should return empty list if start >= end", () => {
+    const xs = LL.range(toThunk(7), toThunk(3));
+    expect(LL.unsafeToArray(xs)).toEqual([]);
   });
 });
 describe("$range:", () => {
   it("should generate a properly bounded `[)` lazy list", () => {
-    expect(LL.unsafeToArray(LL.$range(3, 7))).toEqual([3, 4, 5, 6]);
+    const xs = LL.$range(3, 7);
+    const result = [3, 4, 5, 6];
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should return empty list if start >= end", () => {
+    const xs = LL.$range(7, 3);
+    expect(LL.unsafeToArray(xs)).toEqual([]);
   });
 });
 
