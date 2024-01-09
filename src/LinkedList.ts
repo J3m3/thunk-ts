@@ -56,25 +56,17 @@ const _unsafeToArray = <T>(xs: LazyList<T>): T[] => {
   return __toArray(xs, []);
 };
 
-const $infRange = (start: number): LazyList<number> => {
-  return () => ({
-    head: () => start,
-    rest: $infRange(start + 1),
-  });
-};
-
-const $range = (start: number, end?: number): LazyList<number> => {
-  if (end === undefined) {
-    return $infRange(start);
-  }
-  return () => (start < end ? { head: () => start, rest: $range(start + 1, end) } : null);
-};
-
 const infRange = (start: Thunk<number>): LazyList<number> => {
   return () => ({
     head: start,
     // force to evalute start() + 1 first to avoid stack overflow
     rest: infRange(toThunk(start() + 1)),
+  });
+};
+const $infRange = (start: number): LazyList<number> => {
+  return () => ({
+    head: () => start,
+    rest: $infRange(start + 1),
   });
 };
 
@@ -93,19 +85,11 @@ const range = (start: Thunk<number>, end?: Thunk<number>): LazyList<number> => {
     // force to evalute start() + 1 first to avoid stack overflow
     start() < end() ? { head: start, rest: range(toThunk(start() + 1), end) } : null;
 };
-
-/**
- * NOTE: This fuction cannot simply use buffer to write something to console,
- * because an infinite lazy list can be given.
- * @param xs an lazy list
- * @summary Print each items in the given lazy list line by line.
- */
-const printList = <T>(xs: LazyList<T>) => {
-  let node = xs();
-  while (node !== null) {
-    console.log(node.head());
-    node = node.rest();
+const $range = (start: number, end?: number): LazyList<number> => {
+  if (end === undefined) {
+    return $infRange(start);
   }
+  return () => (start < end ? { head: () => start, rest: $range(start + 1, end) } : null);
 };
 
 const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
@@ -131,6 +115,20 @@ const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
       rest: take(() => n() - 1, node.rest),
     };
   };
+};
+
+/**
+ * NOTE: This fuction cannot simply use buffer to write something to console,
+ * because an infinite lazy list can be given.
+ * @param xs an lazy list
+ * @summary Print each items in the given lazy list line by line.
+ */
+const printList = <T>(xs: LazyList<T>) => {
+  let node = xs();
+  while (node !== null) {
+    console.log(node.head());
+    node = node.rest();
+  }
 };
 
 export {
