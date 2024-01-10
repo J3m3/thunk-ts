@@ -36,7 +36,7 @@ describe("$range:", () => {
   });
 });
 
-describe("take", () => {
+describe("take:", () => {
   it("should take exact amount of the given n", () => {
     const xs = LL.fromArray("Hello, World!".split(""));
     const subXs = LL.take(toThunk(4), xs);
@@ -69,7 +69,7 @@ describe("take", () => {
     expect(LL.unsafeToArray(subXs)).toEqual([]);
   });
 });
-describe("$take", () => {
+describe("$take:", () => {
   it("should take exact amount of the given n", () => {
     const xs = LL.fromArray("Hello, World!".split(""));
     const subXs = LL.$take(4, xs);
