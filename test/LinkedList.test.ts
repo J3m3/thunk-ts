@@ -132,3 +132,25 @@ describe("$filter:", () => {
     expect(LL.unsafeToArray(xs)).toEqual(result);
   });
 });
+
+describe("$map:", () => {
+  it("should properly map elements by the given function", () => {
+    const square = (e: number) => e * e;
+    const length = 7;
+    const xs = LL.$map(square, LL.$range(0, length));
+    const result = range(0, length).map(square);
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should return an empty list if the given list is empty", () => {
+    const f = <T>(_: T) => (void _, undefined);
+    const xs = LL.$map(f, LL.fromArray([]));
+    expect(LL.unsafeToArray(xs)).toEqual([]);
+  });
+  it("should work with an infinite list", () => {
+    const f = <T>(_: T) => (void _, "HACKED");
+    const length = 10;
+    const xs = LL.$take(length, LL.$map(f, LL.$range(0)));
+    const result = range(0, length).map(f);
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+});
