@@ -102,3 +102,25 @@ describe("$take:", () => {
     expect(LL.unsafeToArray(subXs)).toEqual([]);
   });
 });
+
+describe("$filter:", () => {
+  it("should properly filter elements by predicate", () => {
+    const isEven = (e: number) => e % 2 === 0;
+    const length = 7;
+    const xs = LL.$range(0, length);
+    const result = [0, 1, 2, 3, 4, 5, 6].filter(isEven);
+    expect(LL.unsafeToArray(LL.$filter(isEven, xs))).toEqual(result);
+  });
+  it("should return an empty list if all the elements violates the predicate", () => {
+    const isSpace = (e: string) => e === " ";
+    const xs = LL.$filter(isSpace, LL.fromArray("Hello!".split("")));
+    expect(LL.unsafeToArray(xs)).toEqual([]);
+  });
+  it("should work with an infinite list", () => {
+    const isOdd = (e: number) => e % 2 === 1;
+    const length = 5;
+    const xs = LL.$take(length, LL.$filter(isOdd, LL.$range(0)));
+    const result = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(isOdd);
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+});
