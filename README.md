@@ -4,6 +4,32 @@
 
 `thunk-ts` emulates lazy evaluation simply by wrapping expressions into a function.
 
+## Simple Examples
+
+```ts
+import * as LL from "ts-thunk/LinkedList";
+
+// an infinite list of even numbers
+const isEven = (n: number) => n % 2 === 0;
+const evens = LL.$filter(isEven, LL.$range(1));
+
+// an infinite list of prime numbers
+const sieve = (xs: LL.LazyList<number>): LL.LazyList<number> => {
+  return () => {
+    const node = xs();
+    if (node === null) {
+      return null;
+    }
+    const x = node.head();
+    return {
+      head: toThunk(x),
+      rest: sieve(LL.$filter((n: number) => n % x !== 0, node.rest)),
+    };
+  };
+};
+const primes = sieve(LL.$range(2));
+```
+
 ## Installation
 
 ```console
@@ -21,7 +47,7 @@ TODO
 A [`thunk`](https://wiki.haskell.org/Thunk) is a term used in Haskell, which denotes value that is yet to be evaluated.
 
 > [!IMPORTANT]
-> `thunk-ts` does not strictly emulates `thunk` in Haskell. Haskell evaluates expressions up to [WHNF (Weak Head Normal Form)](https://wiki.haskell.org/Weak_head_normal_form).
+> thunk-ts does not strictly emulates `thunk` in Haskell. Haskell evaluates expressions up to [WHNF (Weak Head Normal Form)](https://wiki.haskell.org/Weak_head_normal_form).
 
 ### Functions
 
