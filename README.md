@@ -39,7 +39,7 @@ const r = LL.range(toThunk(0));
 ```
 
 > [!NOTE]
-> You might prefer to use `$-prefixed` functions, because struggling explicitly with lazy stuffs is too cumbersome in the eager language, TypeScript. I will also implement `$-prefixed` functions for this reason.
+> You might prefer to use `$-prefixed` functions, because struggling explicitly with lazy stuffs is too cumbersome in the eager language, TypeScript. I will also implement `$-prefixed` functions first for this reason.
 
 ## References
 
