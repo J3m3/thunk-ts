@@ -38,6 +38,9 @@ const $r = LL.$range(0);
 const r = LL.range(toThunk(0));
 ```
 
+> [!NOTE]
+> You might prefer to use `$-prefixed` functions, because struggling explicitly with lazy stuffs is too cumbersome in the eager language, TypeScript. I will also implement `$-prefixed` functions for this reason.
+
 ## References
 
 - HaskellWiki: https://wiki.haskell.org/
