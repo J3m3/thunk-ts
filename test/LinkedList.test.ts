@@ -154,3 +154,28 @@ describe("$map:", () => {
     expect(LL.unsafeToArray(xs)).toEqual(result);
   });
 });
+
+describe("$fold", () => {
+  it("should properly fold elements by the given function", () => {
+    const f = (acc: number, x: number) => x + acc;
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const result = range(0, length).reduce(f, 0);
+    expect(LL.$fold(f, 0, xs)).toEqual(result);
+  });
+  it("should return the given initial value if the given list is empty", () => {
+    const f = (acc: string, x: string) => `${acc} with ${x}`;
+    const xs = LL.fromArray([]);
+    const result = "Hello, World!";
+    expect(LL.$fold(f, result, xs)).toEqual(result);
+  });
+  it("should not meet stack overflow", () => {
+    const test = () => {
+      const f = (acc: number, x: number) => x + acc;
+      const length = 1000000;
+      const xs = LL.$range(0, length);
+      return LL.$fold(f, 0, xs);
+    };
+    expect(test).not.toThrow(RangeError);
+  });
+});
