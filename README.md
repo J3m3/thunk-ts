@@ -33,7 +33,7 @@ const primes = sieve(LL.$range(2));
 ## Installation
 
 ```console
-npm i thunk-ts -D
+npm i thunk-ts
 ```
 
 ## API
