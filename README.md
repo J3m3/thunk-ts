@@ -70,6 +70,7 @@ const r = LL.range(toThunk(0));
 ## References
 
 - HaskellWiki: https://wiki.haskell.org/
+- Basic idea comes from: https://youtu.be/E5yAoMaVCp0?si=slYqwH_GDHVTm-Ty
 
 ## License
 
