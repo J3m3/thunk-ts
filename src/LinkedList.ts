@@ -117,6 +117,20 @@ export const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
   };
 };
 
+export const $map = <T, U>(f: (x: T) => U, xs: LazyList<T>): LazyList<U> => {
+  return () => {
+    const node = xs();
+    if (node === null) {
+      return null;
+    }
+    const nx = f(node.head());
+    return {
+      head: () => nx,
+      rest: $map(f, node.rest),
+    };
+  };
+};
+
 export const $filter = <T>(
   predicate: (x: T) => boolean,
   xs: LazyList<T>,
