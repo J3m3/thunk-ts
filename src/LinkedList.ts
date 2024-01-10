@@ -117,6 +117,26 @@ export const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
   };
 };
 
+export const $filter = <T>(
+  predicate: (x: T) => boolean,
+  xs: LazyList<T>,
+): LazyList<T> => {
+  return () => {
+    const node = xs();
+    if (node === null) {
+      return null;
+    }
+    const val = node.head();
+    if (predicate(val)) {
+      return {
+        head: () => val,
+        rest: $filter(predicate, node.rest),
+      };
+    }
+    return $filter(predicate, node.rest)();
+  };
+};
+
 /**
  * NOTE: This fuction cannot simply use buffer to write something to console,
  * because an infinite lazy list can be given.
