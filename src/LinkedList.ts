@@ -1,6 +1,6 @@
 import { type Thunk, toThunk } from "./Thunk";
 
-type LazyList<T> = Thunk<{
+export type LazyList<T> = Thunk<{
   head: Thunk<T>;
   rest: LazyList<T>;
 } | null>;
@@ -10,7 +10,7 @@ type LazyList<T> = Thunk<{
  * @param xs a JS array to be converted
  * @returns a lazy list converted from the given array
  */
-const fromArray = <T>(xs: T[]): LazyList<T> => {
+export const fromArray = <T>(xs: T[]): LazyList<T> => {
   return () =>
     xs.length > 0
       ? {
@@ -27,7 +27,7 @@ const fromArray = <T>(xs: T[]): LazyList<T> => {
  * NOTE: This function breaks immutability in favor of performance.
  * @summary Convert a lazy list into a JS array.
  */
-const unsafeToArray = <T>(xs: LazyList<T>): T[] => {
+export const unsafeToArray = <T>(xs: LazyList<T>): T[] => {
   const arr = [];
   let node = xs();
   while (node !== null) {
@@ -44,7 +44,7 @@ const unsafeToArray = <T>(xs: LazyList<T>): T[] => {
  * @summary Convert a lazy list into a JS array.
  * @deprecated
  */
-const _unsafeToArray = <T>(xs: LazyList<T>): T[] => {
+export const _unsafeToArray = <T>(xs: LazyList<T>): T[] => {
   const __toArray = (xs: LazyList<T>, acc: T[]): T[] => {
     const node = xs();
     if (node !== null) {
@@ -56,14 +56,14 @@ const _unsafeToArray = <T>(xs: LazyList<T>): T[] => {
   return __toArray(xs, []);
 };
 
-const infRange = (start: Thunk<number>): LazyList<number> => {
+export const infRange = (start: Thunk<number>): LazyList<number> => {
   return () => ({
     head: start,
     // force to evalute start() + 1 first to avoid stack overflow
     rest: infRange(toThunk(start() + 1)),
   });
 };
-const $infRange = (start: number): LazyList<number> => {
+export const $infRange = (start: number): LazyList<number> => {
   return () => ({
     head: () => start,
     rest: $infRange(start + 1),
@@ -77,7 +77,7 @@ const $infRange = (start: number): LazyList<number> => {
  * @param end an optional end bound
  * @returns a lazy list bounded to [start, end)
  */
-const range = (start: Thunk<number>, end?: Thunk<number>): LazyList<number> => {
+export const range = (start: Thunk<number>, end?: Thunk<number>): LazyList<number> => {
   if (end === undefined) {
     return infRange(start);
   }
@@ -85,14 +85,14 @@ const range = (start: Thunk<number>, end?: Thunk<number>): LazyList<number> => {
     // force to evalute start() + 1 first to avoid stack overflow
     start() < end() ? { head: start, rest: range(toThunk(start() + 1), end) } : null;
 };
-const $range = (start: number, end?: number): LazyList<number> => {
+export const $range = (start: number, end?: number): LazyList<number> => {
   if (end === undefined) {
     return $infRange(start);
   }
   return () => (start < end ? { head: () => start, rest: $range(start + 1, end) } : null);
 };
 
-const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
+export const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
   return () => {
     const node = xs();
     if (node === null || n <= 0) {
@@ -104,7 +104,7 @@ const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
     };
   };
 };
-const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
+export const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
   return () => {
     const node = xs();
     if (node === null || n() <= 0) {
@@ -123,22 +123,10 @@ const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
  * @param xs an lazy list
  * @summary Print each items in the given lazy list line by line.
  */
-const printList = <T>(xs: LazyList<T>) => {
+export const printList = <T>(xs: LazyList<T>) => {
   let node = xs();
   while (node !== null) {
     console.log(node.head());
     node = node.rest();
   }
-};
-
-export {
-  type LazyList,
-  fromArray,
-  unsafeToArray,
-  _unsafeToArray,
-  range,
-  $range,
-  printList,
-  $take,
-  take,
 };
