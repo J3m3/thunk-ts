@@ -152,6 +152,64 @@ export const $filter = <T>(
 };
 
 /**
+ * NOTE: Because JS runtime does not optimize recursive calls,
+ * this function can easily end up with stack overflow.
+ * @desc
+ * Fold the given list from the right with the function and return the accumulated result.
+ * @param f a function to operate each folding
+ * @param acc an initial value of the folded result
+ * @param xs a list to fold
+ * @returns the accumulated result which has same type with acc
+ */
+export const _$foldr = <T, U>(f: (x: T, acc: U) => U, acc: U, xs: LazyList<T>): U => {
+  const node = xs();
+  if (node === null) {
+    return acc;
+  }
+  return f(node.head(), _$foldr(f, acc, node.rest));
+};
+
+/**
+ * NOTE: Because JS runtime does not optimize recursive calls,
+ * this function can easily end up with stack overflow.
+ * @desc
+ * Fold the given list from the left with the function and return the accumulated result.
+ * @param f a function to operate each folding
+ * @param acc an initial value of the folded result
+ * @param xs a list to fold
+ * @returns the accumulated result which has same type with acc
+ */
+export const $foldl = <T, U>(f: (acc: U, x: T) => U, acc: U, xs: LazyList<T>): U => {
+  const node = xs();
+  if (node === null) {
+    return acc;
+  }
+  return $foldl(f, f(acc, node.head()), node.rest);
+};
+
+/**
+ * NOTE: This function is while-loop version of _$foldl, which avoids stack overflow.
+ * @see {@link $foldl}
+ * @see {@link _$foldr}
+ * @desc
+ * Fold the given list from the right with the function and return the accumulated result.
+ * @param f a function to operate each folding
+ * @param init an initial value of the folded result
+ * @param xs a list to fold
+ * @returns the accumulated result which has same type with acc
+ */
+export const $fold = <T, U>(f: (acc: U, x: T) => U, init: U, xs: LazyList<T>): U => {
+  let acc = init;
+  let node = xs();
+  while (node !== null) {
+    const val = node.head();
+    acc = f(acc, val);
+    node = node.rest();
+  }
+  return acc;
+};
+
+/**
  * NOTE: This fuction cannot simply use buffer to write something to console,
  * because an infinite lazy list can be given.
  * @param xs an lazy list
