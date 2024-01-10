@@ -131,6 +131,16 @@ describe("$filter:", () => {
     const result = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(isOdd);
     expect(LL.unsafeToArray(xs)).toEqual(result);
   });
+  it("should evaluate the given predicate lazily", () => {
+    const generateErr = <T>(_: T) => {
+      void _;
+      throw new Error("ERROR!");
+    };
+    const test = () => {
+      return LL.$filter(generateErr, LL.$range(0, 10));
+    };
+    expect(test).not.toThrow();
+  });
 });
 
 describe("$map:", () => {
@@ -152,6 +162,16 @@ describe("$map:", () => {
     const xs = LL.$take(length, LL.$map(f, LL.$range(0)));
     const result = range(0, length).map(f);
     expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should evaluate the given function lazily", () => {
+    const generateErr = <T>(_: T) => {
+      void _;
+      throw new Error("ERROR!");
+    };
+    const test = () => {
+      return LL.$map(generateErr, LL.$range(0, 10));
+    };
+    expect(test).not.toThrow();
   });
 });
 
