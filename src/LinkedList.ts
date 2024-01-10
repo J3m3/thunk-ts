@@ -92,18 +92,6 @@ export const $range = (start: number, end?: number): LazyList<number> => {
   return () => (start < end ? { head: () => start, rest: $range(start + 1, end) } : null);
 };
 
-export const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
-  return () => {
-    const node = xs();
-    if (node === null || n <= 0) {
-      return null;
-    }
-    return {
-      head: node.head,
-      rest: $take(n - 1, node.rest),
-    };
-  };
-};
 export const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
   return () => {
     const node = xs();
@@ -113,6 +101,18 @@ export const take = <T>(n: Thunk<number>, xs: LazyList<T>): LazyList<T> => {
     return {
       head: node.head,
       rest: take(() => n() - 1, node.rest),
+    };
+  };
+};
+export const $take = <T>(n: number, xs: LazyList<T>): LazyList<T> => {
+  return () => {
+    const node = xs();
+    if (node === null || n <= 0) {
+      return null;
+    }
+    return {
+      head: node.head,
+      rest: $take(n - 1, node.rest),
     };
   };
 };
