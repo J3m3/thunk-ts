@@ -17,12 +17,14 @@ export type LazyList<T> = Thunk<{
  * @param xs a JS array to be converted
  * @returns a lazy list converted from the given array
  */
-export const fromArray = <T>(xs: T[]): LazyList<T> => {
+export const fromArray = <T = "A type parameter is required", U extends T = T>(
+  xs: U[],
+): LazyList<U> => {
   return () =>
     xs.length > 0
       ? {
           head: () => xs[0],
-          rest: fromArray(xs.slice(1)),
+          rest: fromArray<U>(xs.slice(1)),
         }
       : null;
 };

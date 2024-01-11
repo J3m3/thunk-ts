@@ -19,7 +19,7 @@ describe("fromArray:", () => {
     expect(LL.fromArray([])()).toEqual(null);
   });
   it("should maintain consistency when converting from array to linked list and back", () => {
-    expect(LL.unsafeToArray(LL.fromArray([1, 2, 3]))).toEqual([1, 2, 3]);
+    expect(LL.unsafeToArray(LL.fromArray<number>([1, 2, 3]))).toEqual([1, 2, 3]);
   });
 });
 
@@ -48,7 +48,7 @@ describe("$range:", () => {
 
 describe("take:", () => {
   it("should take exact amount of the given n", () => {
-    const xs = LL.fromArray("Hello, World!".split(""));
+    const xs = LL.fromArray<string>("Hello, World!".split(""));
     const subXs = LL.take(toThunk(4), xs);
     const result = "Hell".split("");
     expect(LL.unsafeToArray(subXs)).toEqual(result);
@@ -59,7 +59,7 @@ describe("take:", () => {
     expect(LL.unsafeToArray(subXs)).toEqual([]);
   });
   it("should not return more than the length of list", () => {
-    const xs = LL.fromArray([0, 1, 2, 3]);
+    const xs = LL.fromArray<number>([0, 1, 2, 3]);
     const subXs = LL.take(toThunk(100), xs);
     const result = [0, 1, 2, 3];
     expect(LL.unsafeToArray(subXs)).toEqual(result);
@@ -81,7 +81,7 @@ describe("take:", () => {
 });
 describe("$take:", () => {
   it("should take exact amount of the given n", () => {
-    const xs = LL.fromArray("Hello, World!".split(""));
+    const xs = LL.fromArray<string>("Hello, World!".split(""));
     const subXs = LL.$take(4, xs);
     const result = "Hell".split("");
     expect(LL.unsafeToArray(subXs)).toEqual(result);
@@ -92,7 +92,7 @@ describe("$take:", () => {
     expect(LL.unsafeToArray(subXs)).toEqual([]);
   });
   it("should not return more than the length of list", () => {
-    const xs = LL.fromArray([0, 1, 2, 3]);
+    const xs = LL.fromArray<number>([0, 1, 2, 3]);
     const subXs = LL.$take(100, xs);
     const result = [0, 1, 2, 3];
     expect(LL.unsafeToArray(subXs)).toEqual(result);
@@ -123,7 +123,7 @@ describe("$filter:", () => {
   });
   it("should return an empty list if all the elements violates the predicate", () => {
     const isSpace = (e: string) => e === " ";
-    const xs = LL.$filter(isSpace, LL.fromArray("Hello!".split("")));
+    const xs = LL.$filter(isSpace, LL.fromArray<string>("Hello!".split("")));
     expect(LL.unsafeToArray(xs)).toEqual([]);
   });
   it("should work with an infinite list", () => {
