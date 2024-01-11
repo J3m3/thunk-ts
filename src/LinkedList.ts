@@ -288,6 +288,30 @@ export const $at = <T>(xs: LazyList<T>, idx: number): T => {
   return result as T;
 };
 
+export const $prepended = <T>(value: T, xs: LazyList<T>): LazyList<T> => {
+  return () => ({
+    head: () => value,
+    rest: xs,
+  });
+};
+
+export const $pushed = <T>(value: T, xs: LazyList<T>): LazyList<T> => {
+  return () => {
+    const node = xs();
+    if (node === null) {
+      return {
+        head: () => value,
+        rest: toThunk(null),
+      };
+    }
+    const x = node.head();
+    return {
+      head: () => x,
+      rest: $pushed(value, node.rest),
+    };
+  };
+};
+
 /**
  * NOTE: This fuction cannot simply use buffer to write something to console,
  * because an infinite lazy list can be given.
