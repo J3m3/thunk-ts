@@ -7,6 +7,7 @@
 ## Simple Examples
 
 ```ts
+import { toThunk } from "ts-thunk";
 import * as LL from "ts-thunk/LinkedList";
 
 // an infinite list of even numbers
@@ -23,7 +24,7 @@ const sieve = (xs: LL.LazyList<number>): LL.LazyList<number> => {
     const x = node.head();
     return {
       head: toThunk(x),
-      rest: sieve(LL.$filter((n: number) => n % x !== 0, node.rest)),
+      rest: sieve(LL.$filter((n) => n % x !== 0, node.rest)),
     };
   };
 };
