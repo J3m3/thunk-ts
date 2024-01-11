@@ -322,3 +322,100 @@ describe("$at:", () => {
     expect(test).not.toThrow(RangeError);
   });
 });
+
+describe("$prepended:", () => {
+  it("should properly prepend the given value", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const ys = LL.$prepended(-1, xs);
+    const result = range(0, length);
+    result.unshift(-1);
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should properly work with an empty list", () => {
+    const xs = LL.fromArray([]);
+    const ys = LL.$prepended(-1, xs);
+    const result: number[] = [];
+    result.unshift(-1);
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should work properly with multiple prepends", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const ys = LL.$prepended(-3, LL.$prepended(-2, LL.$prepended(-1, xs)));
+    const result = range(0, length);
+    [-1, -2, -3].forEach((e) => result.unshift(e));
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should work properly with different list operations", () => {
+    const isOdd = (e: number) => e % 2 === 1;
+    const length = 20;
+    const xs = LL.$prepended(1, LL.$prepended(2, LL.$range(3, length)));
+    const result = range(3, length);
+    result.unshift(2);
+    result.unshift(1);
+    expect(LL.unsafeToArray(LL.$filter(isOdd, xs))).toEqual(result.filter(isOdd));
+  });
+  it("should work properly with an infinite list", () => {
+    const xs = LL.$range(0);
+    const [i, j] = [-1, -2];
+    const ys = LL.$prepended(j, LL.$prepended(i, xs));
+    const y1 = LL.$head(ys);
+    const y2 = LL.$at(ys, 1);
+    expect(y1).toEqual(j);
+    expect(y2).toEqual(i);
+  });
+  it("should not touch the original list", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const ys = LL.$prepended(-3, LL.$prepended(-2, LL.$prepended(-1, xs)));
+    const result = range(0, length);
+    [-1, -2, -3].forEach((e) => result.unshift(e));
+    expect(LL.unsafeToArray(xs)).toEqual(range(0, length));
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+});
+
+describe("$pushed:", () => {
+  it("should properly push the given value", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const ys = LL.$pushed(-1, xs);
+    const result = range(0, length);
+    result.push(-1);
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should properly work with an empty list", () => {
+    const xs = LL.fromArray([]);
+    const ys = LL.$pushed(-1, xs);
+    const result: number[] = [];
+    result.unshift(-1);
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should work properly with multiple pushes", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const ys = LL.$pushed(-3, LL.$pushed(-2, LL.$pushed(-1, xs)));
+    const result = range(0, length);
+    [-1, -2, -3].forEach((e) => result.push(e));
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should work properly with different list operations", () => {
+    const isOdd = (e: number) => e % 2 === 1;
+    const length = 20;
+    const xs = LL.$pushed(21, LL.$pushed(20, LL.$range(3, length)));
+    const result = range(3, length);
+    result.push(20);
+    result.push(21);
+    expect(LL.unsafeToArray(LL.$filter(isOdd, xs))).toEqual(result.filter(isOdd));
+  });
+  it("should not touch the original list", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const ys = LL.$pushed(-3, LL.$pushed(-2, LL.$pushed(-1, xs)));
+    const result = range(0, length);
+    [-1, -2, -3].forEach((e) => result.push(e));
+    expect(LL.unsafeToArray(xs)).toEqual(range(0, length));
+    expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+});
