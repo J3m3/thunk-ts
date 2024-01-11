@@ -13,6 +13,7 @@ import * as LL from "ts-thunk/LinkedList";
 // an infinite list of even numbers
 const isEven = (n: number) => n % 2 === 0;
 const evens = LL.$filter(isEven, LL.$range(1));
+const xs = LL.unsafeToArray(LL.$take(5, evens)); // [2, 4, 6, 8, 10]
 
 // an infinite list of prime numbers
 const sieve = (xs: LL.LazyList<number>): LL.LazyList<number> => {
@@ -29,6 +30,7 @@ const sieve = (xs: LL.LazyList<number>): LL.LazyList<number> => {
   };
 };
 const primes = sieve(LL.$range(2));
+const ys = LL.unsafeToArray(LL.$take(5, primes)); // [2, 3, 5, 7, 11]
 ```
 
 ## Installation
