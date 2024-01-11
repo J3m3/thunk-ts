@@ -1,5 +1,12 @@
 import { type Thunk, toThunk } from "./Thunk";
 
+export class LinkedListError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "[ts-thunk] LinkedListError";
+  }
+}
+
 export type LazyList<T> = Thunk<{
   head: Thunk<T>;
   rest: LazyList<T>;
