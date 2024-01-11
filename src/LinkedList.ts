@@ -216,6 +216,78 @@ export const $fold = <T, U>(f: (acc: U, x: T) => U, init: U, xs: LazyList<T>): U
   return acc;
 };
 
+export const $head = <T>(xs: LazyList<T>): T => {
+  const node = xs();
+  if (node === null) {
+    throw new LinkedListError("Exception: empty list");
+  }
+  return node.head();
+};
+
+export const $last = <T>(xs: LazyList<T>): T => {
+  let lastValue;
+  let node = xs();
+  if (node === null) {
+    throw new LinkedListError("$last: empty list");
+  }
+  while (node !== null) {
+    lastValue = node.head();
+    node = node.rest();
+  }
+  return lastValue as T;
+};
+
+export const tail = <T>(xs: LazyList<T>): LazyList<T> => {
+  const node = xs();
+  if (node === null) {
+    throw new LinkedListError("tail: empty list");
+  }
+  return () => {
+    const nextNode = node.rest();
+    if (nextNode === null) {
+      return null;
+    }
+    return {
+      head: nextNode.head,
+      rest: nextNode.rest,
+    };
+  };
+};
+
+export const init = <T>(xs: LazyList<T>): LazyList<T> => {
+  const node = xs();
+  if (node === null) {
+    throw new LinkedListError("init: empty list");
+  }
+  return () => {
+    const h = node.head();
+    const r = node.rest();
+    if (r === null) {
+      return null;
+    }
+    return {
+      head: () => h,
+      rest: init(node.rest),
+    };
+  };
+};
+
+export const $at = <T>(xs: LazyList<T>, idx: number): T => {
+  if (idx < 0) {
+    throw new LinkedListError("$at: negative index");
+  }
+  let result;
+  let node = xs();
+  for (let i = 0; i <= idx; i++) {
+    if (node === null) {
+      throw new LinkedListError("$at: index too large");
+    }
+    result = node.head();
+    node = node.rest();
+  }
+  return result as T;
+};
+
 /**
  * NOTE: This fuction cannot simply use buffer to write something to console,
  * because an infinite lazy list can be given.
