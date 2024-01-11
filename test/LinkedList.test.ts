@@ -201,3 +201,124 @@ describe("$fold:", () => {
     expect(test).not.toThrow(RangeError);
   });
 });
+
+describe("$head:", () => {
+  it("should properly take 1 element and force evaluation", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const result = range(0, length)[0];
+    expect(LL.$head(xs)).toEqual(result);
+  });
+  it("should panic when an empty list is given", () => {
+    const test = () => {
+      const xs = LL.fromArray([]);
+      return LL.$head(xs);
+    };
+    expect(test).toThrow(LL.LinkedListError);
+    expect(test).toThrow("empty list");
+  });
+});
+
+describe("$last:", () => {
+  it("should properly return a last element and force evaluation", () => {
+    const length = 10;
+    const xs = LL.$range(0, length);
+    const result = range(0, length)[length - 1];
+    expect(LL.$last(xs)).toEqual(result);
+  });
+  it("should throw LinkedListError when an empty list is given", () => {
+    const test = () => {
+      const xs = LL.fromArray([]);
+      return LL.$last(xs);
+    };
+    expect(test).toThrow(LL.LinkedListError);
+    expect(test).toThrow("empty list");
+  });
+  it("should not meet stack overflow", () => {
+    const test = () => {
+      const length = STACK_OVERFLOW_BOUND;
+      const xs = LL.$range(0, length);
+      return LL.$last(xs);
+    };
+    expect(test).not.toThrow(RangeError);
+  });
+});
+
+describe("tail:", () => {
+  it("should properly return a list without the first element", () => {
+    const length = 10;
+    const xs = LL.tail(LL.$range(0, length));
+    const result = range(0, length).slice(1);
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should throw LinkedListError when an empty list is given", () => {
+    const test = () => {
+      const xs = LL.fromArray([]);
+      return LL.tail(xs);
+    };
+    expect(test).toThrow(LL.LinkedListError);
+    expect(test).toThrow("empty list");
+  });
+});
+
+describe("init:", () => {
+  it("should properly return a list without the last element", () => {
+    const length = 10;
+    const xs = LL.init(LL.$range(0, length));
+    const result = range(0, length).slice(0, length - 1);
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should throw LinkedListError when an empty list is given", () => {
+    const test = () => {
+      const xs = LL.fromArray([]);
+      return LL.init(xs);
+    };
+    expect(test).toThrow(LL.LinkedListError);
+    expect(test).toThrow("empty list");
+  });
+  it("should not meet stack overflow", () => {
+    const test = () => {
+      const length = STACK_OVERFLOW_BOUND;
+      const xs = LL.$range(0, length);
+      return LL.init(xs);
+    };
+    expect(test).not.toThrow(RangeError);
+  });
+});
+
+describe("$at:", () => {
+  it("should properly return an element at the given index", () => {
+    const length = 10;
+    const idx = 5;
+    const xs = LL.$range(0, length);
+    const result = range(0, length)[idx];
+    expect(LL.$at(xs, idx)).toEqual(result);
+  });
+  it("should throw LinkedListError when a negative index is given", () => {
+    const test = () => {
+      const length = 10;
+      const idx = -1;
+      const xs = LL.$range(0, length);
+      return LL.$at(xs, idx);
+    };
+    expect(test).toThrow(LL.LinkedListError);
+    expect(test).toThrow("negative index");
+  });
+  it("should throw LinkedListError when the given index >= length of the list", () => {
+    const test = () => {
+      const idx = 0;
+      const xs = LL.fromArray([]);
+      return LL.$at(xs, idx);
+    };
+    expect(test).toThrow(LL.LinkedListError);
+    expect(test).toThrow("index too large");
+  });
+  it("should not meet stack overflow", () => {
+    const test = () => {
+      const length = STACK_OVERFLOW_BOUND;
+      const xs = LL.$range(0, length);
+      return LL.$at(xs, length - 1);
+    };
+    expect(test).not.toThrow(RangeError);
+  });
+});
