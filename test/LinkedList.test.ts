@@ -2,6 +2,8 @@ import { describe, expect, it } from "@jest/globals";
 import { toThunk } from "../src/Thunk";
 import * as LL from "../src/LinkedList";
 
+const STACK_OVERFLOW_BOUND = 10000000;
+
 const range = (start: number, end: number): number[] => {
   const arr: number[] = [];
   for (let i = start; i < end; i++) {
@@ -175,7 +177,7 @@ describe("$map:", () => {
   });
 });
 
-describe("$fold", () => {
+describe("$fold:", () => {
   it("should properly fold elements by the given function", () => {
     const f = (acc: number, x: number) => x + acc;
     const length = 10;
@@ -192,7 +194,7 @@ describe("$fold", () => {
   it("should not meet stack overflow", () => {
     const test = () => {
       const f = (acc: number, x: number) => x + acc;
-      const length = 1000000;
+      const length = STACK_OVERFLOW_BOUND;
       const xs = LL.$range(0, length);
       return LL.$fold(f, 0, xs);
     };
