@@ -54,7 +54,7 @@ A [`thunk`](https://wiki.haskell.org/Thunk) is a term used in Haskell, which den
 
 ### Functions
 
-`$` prefix denotes `semi`. You can call $-prefixed util functions with primitive values which are not wrapped in `Thunk`. For instance:
+`$` prefix denotes `semi`. You can call $-prefixed util functions with primitive values which are not wrapped in `Thunk`. $-prefiexed functions also return values directly unless they return LazyList. For instance:
 
 ```ts
 import { toThunk } from "ts-thunk";
@@ -65,6 +65,10 @@ const $r = LL.$range(0);
 
 // equivalent to above
 const r = LL.range(toThunk(0));
+
+// returns 10, not () => 10
+const add = (acc: number, x: number) => acc + x;
+const x = LL.$fold(add, 0, LL.fromArray([1, 2, 3]));
 ```
 
 > [!NOTE]
