@@ -234,17 +234,17 @@ export const _$foldr = <T, U>(f: (x: T, acc: U) => U, acc: U, xs: LazyList<T>): 
  * @param xs a list to fold
  * @returns the accumulated result which has same type with acc
  */
-export const $foldl = <T, U>(f: (acc: U, x: T) => U, acc: U, xs: LazyList<T>): U => {
+export const _$foldl = <T, U>(f: (acc: U, x: T) => U, acc: U, xs: LazyList<T>): U => {
   const node = xs();
   if (node === null) {
     return acc;
   }
-  return $foldl(f, f(acc, node.head()), node.rest);
+  return _$foldl(f, f(acc, node.head()), node.rest);
 };
 
 /**
  * NOTE: This function is while-loop version of _$foldl, which avoids stack overflow.
- * @see {@link $foldl}
+ * @see {@link _$foldl}
  * @see {@link _$foldr}
  * @desc
  * Fold the given list from the right with the function and return the accumulated result.
