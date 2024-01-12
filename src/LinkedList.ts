@@ -12,22 +12,47 @@ export type LazyList<T> = Thunk<{
   rest: LazyList<T>;
 } | null>;
 
+type Element<T> = T extends (infer U)[] ? U : T;
+type IntoLazyList<T> = T extends (infer U)[] ? LazyList<IntoLazyList<U>> : T;
+type IntoArray<T> = T extends LazyList<infer U> ? IntoArray<U>[] : T;
+
+export const $isLazyList = <T>(x: unknown): x is LazyList<T> => {
+  if (typeof x !== "function") {
+    return false;
+  }
+  const result = x();
+  return (
+    result === null ||
+    (typeof result.head === "function" && typeof result.rest === "function")
+  );
+};
+
 /**
  * Convert a JS array to a lazy list.
  * @param xs a JS array to be converted
  * @returns a lazy list converted from the given array
  */
-export const fromArray = <T = "A type parameter is required", U extends T = T>(
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const fromArray = <T = "An explicit type parameter is required", U extends T = T>(
   xs: U[],
-): LazyList<U> => {
-  return () =>
-    xs.length > 0
-      ? {
-          head: () => xs[0],
-          rest: fromArray<U>(xs.slice(1)),
-        }
-      : null;
+): LazyList<IntoLazyList<U>> => {
+  return () => {
+    if (xs.length <= 0) {
+      return null;
+    }
+    if (Array.isArray(xs[0])) {
+      return {
+        head: fromArray<Element<U>>(xs[0] as any),
+        rest: fromArray<U>(xs.slice(1) as any),
+      };
+    }
+    return {
+      head: () => xs[0] as any,
+      rest: fromArray<U>(xs.slice(1) as any),
+    };
+  };
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * WARNING: Converting an infinite list to an array results in
@@ -36,14 +61,32 @@ export const fromArray = <T = "A type parameter is required", U extends T = T>(
  * NOTE: This function breaks immutability in favor of performance.
  * @summary Convert a lazy list into a JS array.
  */
-export const unsafeToArray = <T>(xs: LazyList<T>): T[] => {
+export const unsafeToArray = <T>(xs: LazyList<T>): IntoArray<T> => {
   const arr = [];
   let node = xs();
   while (node !== null) {
-    arr.push(node.head());
+    arr.push($isLazyList(node.head) ? unsafeToArray(node.head) : node.head());
     node = node.rest();
   }
-  return arr;
+  return arr as IntoArray<T>;
+};
+
+/**
+ * NOTE: This fuction cannot simply use buffer to write something to console,
+ * because an infinite lazy list can be given.
+ * @param xs an lazy list
+ * @summary Print each items in the given lazy list line by line.
+ */
+export const printList = <T>(xs: LazyList<T>) => {
+  let node = xs();
+  while (node !== null) {
+    if ($isLazyList(node.head)) {
+      printList(node.head);
+    } else {
+      console.log(node.head());
+    }
+    node = node.rest();
+  }
 };
 
 /**
@@ -312,18 +355,4 @@ export const $pushed = <T>(value: T, xs: LazyList<T>): LazyList<T> => {
       rest: $pushed(value, node.rest),
     };
   };
-};
-
-/**
- * NOTE: This fuction cannot simply use buffer to write something to console,
- * because an infinite lazy list can be given.
- * @param xs an lazy list
- * @summary Print each items in the given lazy list line by line.
- */
-export const printList = <T>(xs: LazyList<T>) => {
-  let node = xs();
-  while (node !== null) {
-    console.log(node.head());
-    node = node.rest();
-  }
 };
