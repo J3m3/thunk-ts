@@ -1,5 +1,5 @@
 {
-  "name": "thunk-ts",
+  "name": "lazy-thunk",
   "version": "0.1.0",
   "description": "A set of data structures in TypeScript which utilizes lazy evaluation",
   "main": "index.js",

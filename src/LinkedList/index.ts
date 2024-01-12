@@ -4,7 +4,7 @@ import { deepCopy } from "../utils/Clone";
 export class LinkedListError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "[ts-thunk] LinkedListError";
+    this.name = "[lazy-thunk] LinkedListError";
   }
 }
 

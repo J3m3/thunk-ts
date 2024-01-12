@@ -1,14 +1,14 @@
-# thunk-ts
+# lazy-thunk
 
 > A set of data structures in TypeScript which utilizes lazy evaluation (w/o 3rd party dependencies!)
 
-`thunk-ts` emulates lazy evaluation simply by wrapping expressions into a function.
+`lazy-thunk` emulates lazy evaluation simply by wrapping expressions into a function.
 
 ## Simple Examples
 
 ```ts
-import { toThunk } from "ts-thunk";
-import * as LL from "ts-thunk/LinkedList";
+import { toThunk } from "lazy-thunk";
+import * as LL from "lazy-thunk/LinkedList";
 
 // an infinite list of even numbers
 const isEven = (n: number) => n % 2 === 0;
@@ -36,7 +36,7 @@ const ys = LL.unsafeToArray(LL.$take(5, primes)); // [2, 3, 5, 7, 11]
 ## Installation
 
 ```console
-npm i thunk-ts
+npm i lazy-thunk
 ```
 
 ## API
@@ -50,15 +50,15 @@ TODO
 A [`thunk`](https://wiki.haskell.org/Thunk) is a term used in Haskell, which denotes value that is yet to be evaluated.
 
 > [!IMPORTANT]
-> thunk-ts does not strictly emulates `thunk` in Haskell. Haskell evaluates expressions up to [WHNF (Weak Head Normal Form)](https://wiki.haskell.org/Weak_head_normal_form).
+> lazy-thunk does not strictly emulates `thunk` in Haskell. Haskell evaluates expressions up to [WHNF (Weak Head Normal Form)](https://wiki.haskell.org/Weak_head_normal_form).
 
 ### Functions
 
 `$` prefix denotes `semi`. You can call $-prefixed util functions with primitive values which are not wrapped in `Thunk`. $-prefiexed functions also return values directly unless they return LazyList. For instance:
 
 ```ts
-import { toThunk } from "ts-thunk";
-import * as LL from "ts-thunk/LinkedList";
+import { toThunk } from "lazy-thunk";
+import * as LL from "lazy-thunk/LinkedList";
 
 // An infinite list which contains [0..]
 const $r = LL.$range(0);
