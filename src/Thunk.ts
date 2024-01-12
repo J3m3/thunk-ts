@@ -1,5 +1,6 @@
+import { Primitive } from "./utils/Primitive";
+
 type Thunk<T> = () => T;
-type Primitive = string | number | boolean | bigint | symbol | undefined | null;
 
 /**
  * IMPORTANT: To guarantee that this function works properly,
