@@ -1,4 +1,5 @@
 import { type Thunk, toThunk } from "../Thunk";
+import { deepCopy } from "../utils/Clone";
 
 export class LinkedListError extends Error {
   constructor(message: string) {
@@ -34,8 +35,9 @@ export const $isLazyList = <T>(x: unknown): x is LazyList<T> => {
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const fromArray = <T = "An explicit type parameter is required", U extends T = T>(
-  xs: U[],
+  _xs: U[],
 ): LazyList<IntoLazyList<U>> => {
+  const xs = deepCopy(_xs);
   return () => {
     if (xs.length <= 0) {
       return null;
