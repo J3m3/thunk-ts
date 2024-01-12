@@ -1,4 +1,4 @@
-import { type Thunk, toThunk } from "./Thunk";
+import { type Thunk, toThunk } from "../Thunk";
 
 export class LinkedListError extends Error {
   constructor(message: string) {

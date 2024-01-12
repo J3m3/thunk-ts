@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
-import { toThunk } from "../src/Thunk";
-import * as LL from "../src/LinkedList";
+import { toThunk } from "../Thunk";
+import * as LL from "./LinkedList";
 
 const STACK_OVERFLOW_BOUND = 10000000;
 

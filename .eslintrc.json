@@ -10,7 +10,7 @@
   "ignorePatterns": ["dist", "*.config.(js|ts)"],
   "overrides": [
     {
-      "files": "test/**/*",
+      "files": "**/*.test.ts",
       "plugins": ["jest"],
       "extends": ["plugin:jest/recommended"],
       "env": {
