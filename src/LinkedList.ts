@@ -96,7 +96,8 @@ export const printList = <T>(xs: LazyList<T>) => {
  * @summary Convert a lazy list into a JS array.
  * @deprecated
  */
-export const _unsafeToArray = <T>(xs: LazyList<T>): T[] => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _unsafeToArray = <T>(xs: LazyList<T>): T[] => {
   const __toArray = (xs: LazyList<T>, acc: T[]): T[] => {
     const node = xs();
     if (node !== null) {
