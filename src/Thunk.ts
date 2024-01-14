@@ -1,6 +1,7 @@
 import { Primitive } from "./utils/Primitive";
 
-type Thunk<T> = () => T;
+export type Thunk<T> = () => T;
+export type UnwrapThunk<T> = T extends Thunk<infer U> ? U : never;
 
 /**
  * IMPORTANT: To guarantee that this function works properly,
@@ -26,8 +27,6 @@ type Thunk<T> = () => T;
  * @param x Any primitive value to be wrapped
  * @returns A function that wraps the given value
  */
-const toThunk = <T extends Primitive>(x: T): Thunk<T> => {
+export const toThunk = <T extends Primitive>(x: T): Thunk<T> => {
   return () => x;
 };
-
-export { type Thunk, toThunk };
