@@ -16,7 +16,7 @@ export type LazyList<T extends Thunk<unknown>> = Thunk<Node<T>>;
 
 type Element<T> = T extends (infer U)[] ? U : T;
 type IntoLazyList<T> = T extends (infer U)[] ? LazyList<IntoLazyList<U>> : Thunk<T>;
-type IntoArray<T> = T extends LazyList<infer U> ? IntoArray<U>[] : T;
+type IntoArray<T> = T extends LazyList<infer U> ? IntoArray<U>[] : UnwrapThunk<T>;
 
 export const isLazyList = <T extends Thunk<unknown>>(x: unknown): x is LazyList<T> => {
   if (typeof x !== "function") {
@@ -62,14 +62,14 @@ export const fromArray = <T>(_xs: T[]): LazyList<IntoLazyList<T>> => {
  */
 export const unsafeToArray = <T extends Thunk<unknown>>(
   xs: LazyList<T>,
-): IntoArray<T> => {
+): IntoArray<LazyList<T>> => {
   const arr = [];
   let node = xs();
   while (node !== null) {
     arr.push(isLazyList(node.head) ? unsafeToArray(node.head) : node.head());
     node = node.rest();
   }
-  return arr as IntoArray<T>;
+  return arr as IntoArray<LazyList<T>>;
 };
 
 /**
