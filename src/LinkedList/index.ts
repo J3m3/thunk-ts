@@ -11,8 +11,8 @@ export class LinkedListError extends Error {
 type Node<T extends Thunk<unknown>> = {
   head: T;
   rest: LazyList<T>;
-} | null;
-export type LazyList<T extends Thunk<unknown>> = Thunk<Node<T>>;
+};
+export type LazyList<T extends Thunk<unknown>> = Thunk<Node<T> | null>;
 
 type Element<T> = T extends (infer U)[] ? U : T;
 type IntoLazyList<T> = T extends (infer U)[] ? LazyList<IntoLazyList<U>> : Thunk<T>;
