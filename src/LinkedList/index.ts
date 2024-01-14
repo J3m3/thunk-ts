@@ -34,9 +34,7 @@ export const isLazyList = <T extends Thunk<unknown>>(x: unknown): x is LazyList<
  * @param xs a JS array to be converted
  * @returns a lazy list converted from the given array
  */
-export const fromArray = <T = "An explicit type parameter is required", U extends T = T>(
-  _xs: U[],
-): LazyList<IntoLazyList<U>> => {
+export const fromArray = <T>(_xs: T[]): LazyList<IntoLazyList<T>> => {
   const xs = deepCopy(_xs);
   return () => {
     if (xs.length <= 0) {
@@ -44,13 +42,13 @@ export const fromArray = <T = "An explicit type parameter is required", U extend
     }
     if (Array.isArray(xs[0])) {
       return {
-        head: fromArray<Element<U>>(xs[0]) as IntoLazyList<U>,
-        rest: fromArray<U>(xs.slice(1)),
+        head: fromArray<Element<T>>(xs[0]) as IntoLazyList<T>,
+        rest: fromArray<T>(xs.slice(1)),
       };
     }
     return {
-      head: (() => xs[0]) as IntoLazyList<U>,
-      rest: fromArray<U>(xs.slice(1)),
+      head: (() => xs[0]) as IntoLazyList<T>,
+      rest: fromArray<T>(xs.slice(1)),
     };
   };
 };
