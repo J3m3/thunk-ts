@@ -7,16 +7,16 @@
 ## Simple Examples
 
 ```ts
-import { toThunk } from "lazy-thunk";
+import { type Thunk, toThunk } from "lazy-thunk";
 import * as LL from "lazy-thunk/LinkedList";
 
 // an infinite list of even numbers
-const isEven = (n: number) => n % 2 === 0;
-const evens = LL.$filter(isEven, LL.$range(1));
-const xs = LL.unsafeToArray(LL.$take(5, evens)); // [2, 4, 6, 8, 10]
+const isEven = (n: Thunk<number>) => n() % 2 === 0;
+const evens = LL.filter(isEven, LL.range(1));
+const xs = LL.unsafeToArray(LL.take(5, evens)); // [2, 4, 6, 8, 10]
 
 // an infinite list of prime numbers
-const sieve = (xs: LL.LazyList<number>): LL.LazyList<number> => {
+const sieve = (xs: LL.LazyList<Thunk<number>>): LL.LazyList<Thunk<number>> => {
   return () => {
     const node = xs();
     if (node === null) {
@@ -25,12 +25,12 @@ const sieve = (xs: LL.LazyList<number>): LL.LazyList<number> => {
     const x = node.head();
     return {
       head: toThunk(x),
-      rest: sieve(LL.$filter((n) => n % x !== 0, node.rest)),
+      rest: sieve(LL.filter((n) => n() % x !== 0, node.rest)),
     };
   };
 };
-const primes = sieve(LL.$range(2));
-const ys = LL.unsafeToArray(LL.$take(5, primes)); // [2, 3, 5, 7, 11]
+const primes = sieve(LL.range(2));
+const ys = LL.unsafeToArray(LL.take(5, primes)); // [2, 3, 5, 7, 11]
 ```
 
 ## Installation
@@ -51,28 +51,6 @@ A [`thunk`](https://wiki.haskell.org/Thunk) is a term used in Haskell, which den
 
 > [!IMPORTANT]
 > lazy-thunk does not strictly emulates `thunk` in Haskell. Haskell evaluates expressions up to [WHNF (Weak Head Normal Form)](https://wiki.haskell.org/Weak_head_normal_form).
-
-### Functions
-
-`$` prefix denotes `semi`. You can call $-prefixed util functions with primitive values which are not wrapped in `Thunk`. $-prefiexed functions also return values directly unless they return LazyList. For instance:
-
-```ts
-import { toThunk } from "lazy-thunk";
-import * as LL from "lazy-thunk/LinkedList";
-
-// An infinite list which contains [0..]
-const $r = LL.$range(0);
-
-// equivalent to above
-const r = LL.range(toThunk(0));
-
-// returns 10, not () => 10
-const add = (acc: number, x: number) => acc + x;
-const x = LL.$fold(add, 0, LL.fromArray([1, 2, 3]));
-```
-
-> [!NOTE]
-> You might prefer to use `$-prefixed` functions, because struggling explicitly with lazy stuffs is too cumbersome in the eager language, TypeScript. I will also implement `$-prefixed` functions first for this reason.
 
 ## References
 
