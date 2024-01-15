@@ -581,3 +581,63 @@ describe("pushed:", () => {
     expect(LL.unsafeToArray(ysss)).toEqual(result);
   });
 });
+
+describe("isEqual:", () => {
+  it("should properly check shallow equality", () => {
+    const xs = LL.range(0, 5);
+    const ys = LL.range(0, 5);
+    const diffs = LL.range(-1, 4);
+    expect(LL.isEqual(xs, ys)).toBe(true);
+    expect(LL.isEqual(xs, diffs)).toBe(false);
+    expect(LL.isEqual(ys, diffs)).toBe(false);
+  });
+  it("should be commutative", () => {
+    const xs = LL.range(0, 5);
+    const ys = LL.range(0, 5);
+    const diffs = LL.range(-1, 4);
+    expect(LL.isEqual(ys, xs)).toBe(true);
+    expect(LL.isEqual(diffs, xs)).toBe(false);
+    expect(LL.isEqual(diffs, ys)).toBe(false);
+  });
+  it("should properly check deep equality", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    const ysss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    const diffsss = LL.fromArray([
+      [[0], [2]],
+      [[3], [4]],
+    ]);
+    expect(LL.isEqual(xsss, ysss)).toBe(true);
+    expect(LL.isEqual(xsss, diffsss)).toBe(false);
+    expect(LL.isEqual(ysss, diffsss)).toBe(false);
+  });
+  it("should return false when one element is LazyList but the other is not", () => {
+    const xs = LL.fromArray([
+      [1, 2],
+      [3, 4],
+    ]);
+    const ys = LL.fromArray([1, 2, 3, 4]);
+    // @ts-expect-error type incompatibility also checked by TypeScript compiler
+    expect(LL.isEqual(xs, ys)).toBe(false);
+  });
+  it("should properly detect length difference", () => {
+    const xs = LL.range(0, 5);
+    const ys = LL.range(0, 6);
+    const xss = LL.fromArray([
+      [1, 2],
+      [3, 4],
+      [5, 6],
+    ]);
+    const yss = LL.fromArray([
+      [1, 2],
+      [3, 4],
+    ]);
+    expect(LL.isEqual(xs, ys)).toBe(false);
+    expect(LL.isEqual(xss, yss)).toBe(false);
+  });
+});
