@@ -1,18 +1,14 @@
-import { Primitive } from "../utils/Primitive";
-
 export type Thunk<T> = () => T;
 export type UnwrapThunk<T> = T extends Thunk<infer U> ? U : never;
 
 /**
- * IMPORTANT: To guarantee that this function works properly,
- * you have to pass ___ONLY SINGLE___ primitive value.
+ * IMPORTANT: To guarantee that this function works as intended,
+ * you have to pass ___ONLY SINGLE___ literal value.
  * Otherwise, lazy evaluation would not work as you intended,
  * because JS runtimes evaluate expressions eagerly by default.
  *
- * This function may work as you intended in some other situations without Primitive types (i.e. callbacks),
- * but I keep it contrained for simplicity.
  * To safely wrap some expressions into Thunk,
- * please use a function which returns that expression.
+ * please use a function which returns that expression (i.e. `() => 3 + 7`).
  *
  * So what is the purpose of this contrained function?
  * With it, you can force the given expression evaluated first.
@@ -21,12 +17,12 @@ export type UnwrapThunk<T> = T extends Thunk<infer U> ? U : never;
  * // returns () => 1
  * const x = toThunk(1)
  * @example
- * // This returns () => 6, NOT () => 3 + 3, because JS runtimes evaluate `3 + 3` first.
- * // This might cause critical issues while performing recursions (i.e. infinite recursion).
+ * // This returns () => 6, NOT () => 3 + 3,
+ * // because JS runtimes evaluate `3 + 3` first.
  * const x = toThunk(3 + 3)
- * @param x Any primitive value to be wrapped
+ * @param x Any single literal value to be wrapped
  * @returns A function that wraps the given value
  */
-export const toThunk = <T extends Primitive>(x: T): Thunk<T> => {
+export const toThunk = <T>(x: T): Thunk<T> => {
   return () => x;
 };
