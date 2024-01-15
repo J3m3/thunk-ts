@@ -7,6 +7,10 @@ export type UnwrapThunk<T> = T extends Thunk<infer U> ? U : never;
  * Otherwise, lazy evaluation would not work as you intended,
  * because JS runtimes evaluate expressions eagerly by default.
  *
+ * NOTE: This function does not deep-copy the given argument.
+ * This means that the thunk returned by `toThunk` can be impacted
+ * by changes of inner fields of original referenced value.
+ *
  * To safely wrap some expressions into Thunk,
  * please use a function which returns that expression (i.e. `() => 3 + 7`).
  *
