@@ -222,6 +222,40 @@ describe("map:", () => {
   });
 });
 
+describe("_foldr:", () => {
+  it("should properly fold elements by the given function", () => {
+    const f = (acc: number, x: number) => x + acc;
+    const fT = (x: Thunk<number>, acc: Thunk<number>) => toThunk(x() + acc());
+    const length = 10;
+    const xs = LL.range(0, length);
+    const result = range(0, length).reduceRight(f, 0);
+    expect(LL._foldr(fT, toThunk(0), xs)()).toEqual(result);
+  });
+  it("should return the given initial value if the given list is empty", () => {
+    const fT = (acc: Thunk<string>, x: Thunk<string>) => toThunk(`${acc()} with ${x()}`);
+    const xs = LL.fromArray([]);
+    const result = "Hello, World!";
+    expect(LL._foldr(fT, toThunk(result), xs)()).toEqual(result);
+  });
+});
+
+describe("_foldl:", () => {
+  it("should properly fold elements by the given function", () => {
+    const f = (acc: number, x: number) => x + acc;
+    const fT = (acc: Thunk<number>, x: Thunk<number>) => toThunk(x() + acc());
+    const length = 10;
+    const xs = LL.range(0, length);
+    const result = range(0, length).reduce(f, 0);
+    expect(LL._foldl(fT, toThunk(0), xs)()).toEqual(result);
+  });
+  it("should return the given initial value if the given list is empty", () => {
+    const fT = (acc: Thunk<string>, x: Thunk<string>) => toThunk(`${acc()} with ${x()}`);
+    const xs = LL.fromArray([]);
+    const result = "Hello, World!";
+    expect(LL._foldl(fT, toThunk(result), xs)()).toEqual(result);
+  });
+});
+
 describe("fold:", () => {
   it("should properly fold elements by the given function", () => {
     const f = (acc: number, x: number) => x + acc;
