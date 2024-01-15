@@ -67,6 +67,24 @@ describe("general conversions:", () => {
   });
 });
 
+describe("isLazyList:", () => {
+  it("should return true when the given argument is a LazyList", () => {
+    const xs = LL.fromArray([]);
+    const ys = LL.range(0, 10);
+    const zs = LL.fromArray([[], []]);
+    expect(LL.isLazyList(xs)).toBe(true);
+    expect(LL.isLazyList(ys)).toBe(true);
+    expect(LL.isLazyList(zs)).toBe(true);
+  });
+  it("should return false when the given argument is not a function", () => {
+    [{}, { head: () => 7, rest: () => null }, [], "Hello, World!", 1, true].forEach(
+      (val) => {
+        expect(LL.isLazyList(val)).toBe(false);
+      },
+    );
+  });
+});
+
 describe("range:", () => {
   it("should generate a properly bounded `[)` lazy list", () => {
     const xs = LL.range(3, 7);
