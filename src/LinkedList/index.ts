@@ -299,13 +299,12 @@ export const init = <T extends Thunk<unknown>>(xs: LazyList<T>): LazyList<T> => 
     throw new LinkedListError("init: empty list");
   }
   return () => {
-    const h = node.head();
     const r = node.rest();
     if (r === null) {
       return null;
     }
     return {
-      head: (() => h) as T,
+      head: node.head,
       rest: init(node.rest),
     };
   };
