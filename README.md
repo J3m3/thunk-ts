@@ -22,10 +22,10 @@ const sieve = (xs: LL.LazyList<Thunk<number>>): LL.LazyList<Thunk<number>> => {
     if (node === null) {
       return null;
     }
-    const x = node.head();
+    const h = node.head;
     return {
-      head: toThunk(x),
-      rest: sieve(LL.filter((n) => n() % x !== 0, node.rest)),
+      head: h,
+      rest: sieve(LL.filter((n) => n() % h() !== 0, node.rest)),
     };
   };
 };
