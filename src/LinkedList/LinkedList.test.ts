@@ -641,3 +641,14 @@ describe("isEqual:", () => {
     expect(LL.isEqual(xss, yss)).toBe(false);
   });
 });
+
+describe("isEmpty:", () => {
+  it("should return true when empty list is given", () => {
+    const xs = LL.fromArray([]);
+    expect(LL.isEmpty(xs)).toBe(true);
+  });
+  it("should return false when non-empty list is given", () => {
+    const xs = LL.fromArray([false]);
+    expect(LL.isEmpty(xs)).toBe(false);
+  });
+});
