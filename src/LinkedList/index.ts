@@ -384,3 +384,13 @@ export const isEqual = <T extends Thunk<unknown>>(
 export const isEmpty = <T extends Thunk<unknown>>(xs: LazyList<T>): boolean => {
   return xs() === null ? true : false;
 };
+
+export const length = <T extends Thunk<unknown>>(xs: LazyList<T>): number => {
+  let length = 0;
+  let node = xs();
+  while (node !== null) {
+    length++;
+    node = node.rest();
+  }
+  return length;
+};
