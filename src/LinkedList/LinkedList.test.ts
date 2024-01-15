@@ -237,7 +237,7 @@ describe("head:", () => {
     const result = range(0, length)[0];
     expect(LL.head(xs)()).toEqual(result);
   });
-  it("should panic when an empty list is given", () => {
+  it("should throw LinkedListError when an empty list is given", () => {
     const test = () => {
       const xs = LL.fromArray([]);
       return LL.head(xs);
