@@ -1,4 +1,5 @@
 import { describe, expect, it } from "@jest/globals";
+import { Expect, Equal } from "../../test/helper";
 import { Thunk, toThunk } from "../Thunk";
 import * as LL from ".";
 
@@ -18,8 +19,51 @@ describe("fromArray:", () => {
   it("should generate Thunk<null> when an empty array is given", () => {
     expect(LL.fromArray([])()).toEqual(null);
   });
+});
+
+describe("unsafeToArray:", () => {
+  it("should return null when empty lazy list is given", () => {
+    expect(LL.unsafeToArray(LL.fromArray([]))).toEqual([]);
+  });
+});
+
+describe("general conversions:", () => {
   it("should maintain consistency when converting from array to linked list and back", () => {
     expect(LL.unsafeToArray(LL.fromArray([1, 2, 3]))).toEqual([1, 2, 3]);
+  });
+  it("should let TypeScript compiler infer types properly even with nested structures", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    ({}) as Expect<
+      Equal<LL.LazyList<LL.LazyList<LL.LazyList<Thunk<number>>>>, typeof xsss>
+    >;
+    expect(1).toBe(1);
+  });
+  it("should work recursively so that nested structure is consistently preserved", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    const result = [
+      [[1], [2]],
+      [[3], [4]],
+    ];
+    expect(LL.unsafeToArray(xsss)).toEqual(result);
+  });
+  it("should not be impacted by mutating inner fields of the orignal array", () => {
+    const given = [
+      [[1], [2]],
+      [[3], [4]],
+    ];
+    const xsss = LL.fromArray(given);
+    given[0][0][0] = 1000;
+    const result = [
+      [[1], [2]],
+      [[3], [4]],
+    ];
+    expect(LL.unsafeToArray(xsss)).toEqual(result);
   });
 });
 
@@ -66,6 +110,15 @@ describe("take:", () => {
 
     subXs = LL.take(-1, xs);
     expect(LL.unsafeToArray(subXs)).toEqual([]);
+  });
+  it("should take LazyList if a nested list is given", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    const ysss = LL.take(1, xsss);
+    const result = [[[1], [2]]];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
   });
 });
 
@@ -134,6 +187,21 @@ describe("map:", () => {
     };
     expect(test).not.toThrow();
   });
+  it("should work properly with a nested list", () => {
+    const f = (xs: LL.LazyList<Thunk<number>>): LL.LazyList<Thunk<number>> => {
+      return LL.prepended(toThunk(100), xs);
+    };
+    const xss = LL.fromArray<number[]>([
+      [2, 3],
+      [4, 5],
+    ]);
+    const yss = LL.map(f, xss);
+    const result = [
+      [100, 2, 3],
+      [100, 4, 5],
+    ];
+    expect(LL.unsafeToArray(yss)).toEqual(result);
+  });
 });
 
 describe("fold:", () => {
@@ -163,7 +231,7 @@ describe("fold:", () => {
 });
 
 describe("head:", () => {
-  it("should properly take 1 element and force evaluation", () => {
+  it("should properly take 1st element", () => {
     const length = 10;
     const xs = LL.range(0, length);
     const result = range(0, length)[0];
@@ -177,14 +245,23 @@ describe("head:", () => {
     expect(test).toThrow(LL.LinkedListError);
     expect(test).toThrow("empty list");
   });
+  it("should return LazyList if a nested list is given", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    const ysss = LL.head(xsss);
+    const result = [[1], [2]];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
+  });
 });
 
 describe("last:", () => {
-  it("should properly return a last element and force evaluation", () => {
+  it("should properly return the last element", () => {
     const length = 10;
     const xs = LL.range(0, length);
     const result = range(0, length)[length - 1];
-    expect(LL.last(xs)).toEqual(result);
+    expect(LL.last(xs)()).toEqual(result);
   });
   it("should throw LinkedListError when an empty list is given", () => {
     const test = () => {
@@ -202,6 +279,15 @@ describe("last:", () => {
     };
     expect(test).not.toThrow(RangeError);
   });
+  it("should return LazyList if a nested list is given", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+    ]);
+    const ysss = LL.last(xsss);
+    const result = [[3], [4]];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
+  });
 });
 
 describe("tail:", () => {
@@ -218,6 +304,19 @@ describe("tail:", () => {
     };
     expect(test).toThrow(LL.LinkedListError);
     expect(test).toThrow("empty list");
+  });
+  it("should return nested LazyList if a nested list is given", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+      [[5], [6]],
+    ]);
+    const ysss = LL.tail(xsss);
+    const result = [
+      [[3], [4]],
+      [[5], [6]],
+    ];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
   });
 });
 
@@ -243,6 +342,19 @@ describe("init:", () => {
       return LL.init(xs);
     };
     expect(test).not.toThrow(RangeError);
+  });
+  it("should return nested LazyList if a nested list is given", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+      [[5], [6]],
+    ]);
+    const ysss = LL.init(xsss);
+    const result = [
+      [[1], [2]],
+      [[3], [4]],
+    ];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
   });
 });
 
@@ -281,6 +393,16 @@ describe("at:", () => {
     };
     expect(test).not.toThrow(RangeError);
   });
+  it("should return LazyList if a nested list is given", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+      [[5], [6]],
+    ]);
+    const ysss = LL.at(xsss, 1);
+    const result = [[3], [4]];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
+  });
 });
 
 describe("prepended:", () => {
@@ -293,7 +415,7 @@ describe("prepended:", () => {
     expect(LL.unsafeToArray(ys)).toEqual(result);
   });
   it("should properly work with an empty list", () => {
-    const xs = LL.fromArray([]);
+    const xs = LL.fromArray([] as number[]);
     const ys = LL.prepended(toThunk(-1), xs);
     const result: number[] = [];
     result.unshift(-1);
@@ -341,6 +463,16 @@ describe("prepended:", () => {
     expect(LL.unsafeToArray(xs)).toEqual(range(0, length));
     expect(LL.unsafeToArray(ys)).toEqual(result);
   });
+  it("should properly prepend a LazyList to a nested LazyList", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+      [[5], [6]],
+    ]);
+    const ysss = LL.prepended(LL.fromArray([[-1, 0]]), xsss);
+    const result = [[[-1, 0]], [[1], [2]], [[3], [4]], [[5], [6]]];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
+  });
 });
 
 describe("pushed:", () => {
@@ -353,7 +485,7 @@ describe("pushed:", () => {
     expect(LL.unsafeToArray(ys)).toEqual(result);
   });
   it("should properly work with an empty list", () => {
-    const xs = LL.fromArray([]);
+    const xs = LL.fromArray([] as number[]);
     const ys = LL.pushed(toThunk(-1), xs);
     const result: number[] = [];
     result.unshift(-1);
@@ -385,5 +517,15 @@ describe("pushed:", () => {
     [-1, -2, -3].forEach((e) => result.push(e));
     expect(LL.unsafeToArray(xs)).toEqual(range(0, length));
     expect(LL.unsafeToArray(ys)).toEqual(result);
+  });
+  it("should properly push a LazyList to a nested LazyList", () => {
+    const xsss = LL.fromArray([
+      [[1], [2]],
+      [[3], [4]],
+      [[5], [6]],
+    ]);
+    const ysss = LL.pushed(LL.fromArray([[7, 8]]), xsss);
+    const result = [[[1], [2]], [[3], [4]], [[5], [6]], [[7, 8]]];
+    expect(LL.unsafeToArray(ysss)).toEqual(result);
   });
 });
