@@ -1,4 +1,4 @@
-import { Primitive } from "./utils/Primitive";
+import { Primitive } from "../utils/Primitive";
 
 export type Thunk<T> = () => T;
 export type UnwrapThunk<T> = T extends Thunk<infer U> ? U : never;
