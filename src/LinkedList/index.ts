@@ -270,7 +270,7 @@ export const last = <T extends Thunk<unknown>>(xs: LazyList<T>): T => {
     throw new LinkedListError("last: empty list");
   }
   while (node !== null) {
-    lastValue = node.head();
+    lastValue = node.head;
     node = node.rest();
   }
   return lastValue as T;
