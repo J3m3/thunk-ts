@@ -380,3 +380,7 @@ export const isEqual = <T extends Thunk<unknown>>(
   }
   return xNode === null && yNode === null ? true : false;
 };
+
+export const isEmpty = <T extends Thunk<unknown>>(xs: LazyList<T>): boolean => {
+  return xs() === null ? true : false;
+};
