@@ -326,20 +326,20 @@ export const at = <T extends Thunk<unknown>>(xs: LazyList<T>, idx: number): T =>
   return result as T;
 };
 
-export const prepended = <T extends Thunk<unknown>>(
+export const prepended = <T extends U, U extends Thunk<unknown>>(
   value: T,
-  xs: LazyList<T>,
-): LazyList<T> => {
+  xs: LazyList<U>,
+): LazyList<U> => {
   return () => ({
     head: value,
     rest: xs,
   });
 };
 
-export const pushed = <T extends Thunk<unknown>>(
+export const pushed = <T extends U, U extends Thunk<unknown>>(
   value: T,
-  xs: LazyList<T>,
-): LazyList<T> => {
+  xs: LazyList<U>,
+): LazyList<U> => {
   return () => {
     const node = xs();
     if (node === null) {
