@@ -652,3 +652,17 @@ describe("isEmpty:", () => {
     expect(LL.isEmpty(xs)).toBe(false);
   });
 });
+
+describe("length:", () => {
+  it("should return the exact length of the list", () => {
+    const length = 10;
+    const xs = LL.range(0, 10);
+    expect(LL.length(xs)).toEqual(length);
+  });
+  it("should return the length of outermost lists when a nested list is given", () => {
+    const origin = [[[], []], [[]]];
+    const length = origin.length;
+    const xsss = LL.fromArray(origin);
+    expect(LL.length(xsss)).toEqual(length);
+  });
+});
