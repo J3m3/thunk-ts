@@ -354,3 +354,29 @@ export const pushed = <T extends U, U extends Thunk<unknown>>(
     };
   };
 };
+
+export const isEqual = <T extends Thunk<unknown>>(
+  xs: LazyList<T>,
+  ys: LazyList<T>,
+): boolean => {
+  let xNode = xs();
+  let yNode = ys();
+  while (xNode !== null && yNode !== null) {
+    const xHead = xNode.head;
+    const yHead = yNode.head;
+    if (isLazyList(xHead) && isLazyList(yHead)) {
+      if (!isEqual(xHead, yHead)) {
+        return false;
+      }
+    } else if (!isLazyList(xHead) && !isLazyList(yHead)) {
+      if (!Object.is(xHead(), yHead())) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+    xNode = xNode.rest();
+    yNode = yNode.rest();
+  }
+  return xNode === null && yNode === null ? true : false;
+};
