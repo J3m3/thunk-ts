@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "rollup --config --configPlugin typescript",
     "build:tsc": "tsc",
-    "lint": "eslint .",
+    "lint": "tsc --noEmit && eslint .",
     "prepare": "husky install"
   },
   "keywords": [
