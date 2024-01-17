@@ -24,6 +24,11 @@
     "lint": "tsc --noEmit && eslint .",
     "prepare": "husky install"
   },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "TypeScript",
     "Lazy Evaluation",
