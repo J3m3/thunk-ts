@@ -2,7 +2,21 @@
   "name": "lazy-thunk",
   "version": "0.1.0",
   "description": "A set of data structures in TypeScript which utilizes lazy evaluation",
-  "main": "index.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./LinkedList": {
+      "types": "./dist/LinkedList/index.d.ts",
+      "import": "./dist/LinkedList/index.mjs",
+      "require": "./dist/LinkedList/index.cjs"
+    }
+  },
   "scripts": {
     "test": "jest",
     "build": "rollup --config --configPlugin typescript",
