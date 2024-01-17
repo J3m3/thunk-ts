@@ -1,3 +1,1 @@
-import { type Thunk, toThunk } from "./Thunk";
-
-export { type Thunk, toThunk };
+export { type Thunk, toThunk } from "./Thunk";
