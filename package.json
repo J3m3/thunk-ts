@@ -29,6 +29,17 @@
     "LICENSE",
     "README.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/J3m3/lazy-thunk.git"
+  },
+  "homepage": "https://github.com/J3m3/lazy-thunk/blob/main/README.md",
+  "bugs": {
+    "url": "https://github.com/J3m3/lazy-thunk/issues"
+  },
+  "engines": {
+    "node": ">=16.15.1"
+  },
   "keywords": [
     "TypeScript",
     "Lazy Evaluation",
