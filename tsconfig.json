@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "esnext",
+    "target": "es6",
+    "module": "es6",
     "moduleResolution": "bundler",
     "strict": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "declaration": true
   },
   "include": ["src", "test", "*.config.ts"]
 }
