@@ -31,7 +31,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/J3m3/lazy-thunk.git"
+    "url": "git+https://github.com/J3m3/lazy-thunk.git"
   },
   "homepage": "https://github.com/J3m3/lazy-thunk/blob/main/README.md",
   "bugs": {
