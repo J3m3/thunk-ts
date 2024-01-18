@@ -1,5 +1,7 @@
 # lazy-thunk
 
+[![CI](https://github.com/J3m3/lazy-thunk/actions/workflows/ci.yml/badge.svg)](https://github.com/J3m3/lazy-thunk/actions/workflows/ci.yml)
+
 > A set of data structures in TypeScript which utilizes lazy evaluation (w/o 3rd party dependencies!)
 
 `lazy-thunk` emulates lazy evaluation simply by wrapping expressions into a function.
