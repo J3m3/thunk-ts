@@ -45,7 +45,10 @@
     "Lazy Evaluation",
     "Thunk"
   ],
-  "author": "J3m3",
+  "author": {
+    "name": "Je Sung Yang",
+    "email": "y.j3ms.n@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
