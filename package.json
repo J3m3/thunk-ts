@@ -29,6 +29,7 @@
   },
   "scripts": {
     "test": "jest",
+    "test:ci": "jest --ci --coverage",
     "build": "unbuild",
     "build:tsc": "tsc",
     "lint": "tsc --noEmit && eslint --cache --cache-location './node_modules/.cache/eslint/.eslintcache' src test && prettier -c --cache src test",
