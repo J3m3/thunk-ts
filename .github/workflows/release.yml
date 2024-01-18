@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        type: choice
+        description: Semver version to bump
+        options:
+          - patch
+          - minor
+          - major
+          - recommended
+        default: recommended
+      dry-run:
+        type: boolean
+        description: Perform dry-run
+        default: true
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Set up git identity
+        run: |
+          git config --local user.name "github-actions[bot]"
+          # This email identifies the commit as GitHub Actions 
+          # - see https://github.com/orgs/community/discussions/26560
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Add Github releases & Publish to npm
+        run: |
+          pnpm run release \
+            ${{ github.event.inputs.bump != 'recommended' && github.event.inputs.bump || '' }} \
+            ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }} \
+            --ci -V
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
