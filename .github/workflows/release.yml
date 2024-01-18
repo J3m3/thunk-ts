@@ -1,6 +1,11 @@
 name: Release
 
-run-name: Release${{ github.event.inputs.dry-run == 'true' && ' --dry-run' || '' }}
+run-name: >-
+  Release
+  ${{ inputs.bump != 'recommended' && inputs.bump || '' }}
+  ${{ inputs.dry-run == 'true' && '--dry-run' || '' }}
+  ${{ inputs.no-inc == 'true' && '--no-increment' || '' }}
+  ${{ inputs.no-npm == 'true' && '--no-npm' || '' }}
 
 on:
   workflow_dispatch:
@@ -14,10 +19,21 @@ on:
           - major
           - recommended
         default: recommended
+
       dry-run:
         type: boolean
         description: Perform dry-run
         default: true
+
+      no-inc:
+        type: boolean
+        description: Do not bump
+        default: false
+
+      no-npm:
+        type: boolean
+        description: Do not publish to npm
+        default: false
 
 permissions:
   contents: write
@@ -55,8 +71,10 @@ jobs:
       - name: Add Github releases & Publish to npm
         run: |
           pnpm run release \
-            ${{ github.event.inputs.bump != 'recommended' && github.event.inputs.bump || '' }} \
-            ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }} \
+            ${{ inputs.bump != 'recommended' && inputs.bump || '' }} \
+            ${{ inputs.dry-run == 'true' && '--dry-run' || '' }} \
+            ${{ inputs.no-inc == 'true' && '--no-increment' || '' }} \
+            ${{ inputs.no-npm == 'true' && '--no-npm' || '' }} \
             --ci -V
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
