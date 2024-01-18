@@ -2,10 +2,10 @@ name: Release
 
 run-name: >-
   Release
-  ${{ inputs.bump != 'recommended' && inputs.bump || '' }}
-  ${{ inputs.dry-run == 'true' && '--dry-run' || '' }}
-  ${{ inputs.no-inc == 'true' && '--no-increment' || '' }}
-  ${{ inputs.no-npm == 'true' && '--no-npm' || '' }}
+  ${{ github.event.inputs.bump != 'recommended' && github.event.inputs.bump || '' }}
+  ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }}
+  ${{ github.event.inputs.no-inc == 'true' && '--no-increment' || '' }}
+  ${{ github.event.inputs.no-npm == 'true' && '--no-npm' || '' }}
 
 on:
   workflow_dispatch:
@@ -71,10 +71,10 @@ jobs:
       - name: Add Github releases & Publish to npm
         run: |
           pnpm run release \
-            ${{ inputs.bump != 'recommended' && inputs.bump || '' }} \
-            ${{ inputs.dry-run == 'true' && '--dry-run' || '' }} \
-            ${{ inputs.no-inc == 'true' && '--no-increment' || '' }} \
-            ${{ inputs.no-npm == 'true' && '--no-npm' || '' }} \
+            ${{ github.event.inputs.bump != 'recommended' && github.event.inputs.bump || '' }} \
+            ${{ github.event.inputs.dry-run == 'true' && '--dry-run' || '' }} \
+            ${{ github.event.inputs.no-inc == 'true' && '--no-increment' || '' }} \
+            ${{ github.event.inputs.no-npm == 'true' && '--no-npm' || '' }} \
             --ci -V
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
