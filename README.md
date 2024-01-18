@@ -1,6 +1,8 @@
 # lazy-thunk
 
+[![NPM Version](https://img.shields.io/npm/v/lazy-thunk)](https://www.npmjs.com/package/lazy-thunk)
 [![CI](https://github.com/J3m3/lazy-thunk/actions/workflows/ci.yml/badge.svg)](https://github.com/J3m3/lazy-thunk/actions/workflows/ci.yml)
+[![Release](https://github.com/J3m3/lazy-thunk/actions/workflows/release.yml/badge.svg)](https://github.com/J3m3/lazy-thunk/actions/workflows/release.yml)
 
 > A set of data structures in TypeScript which utilizes lazy evaluation (w/o 3rd party dependencies!)
 
