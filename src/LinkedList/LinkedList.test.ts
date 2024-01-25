@@ -3,7 +3,7 @@ import { Expect, Equal } from "../../test/helper";
 import { Thunk, toThunk } from "../Thunk";
 import * as LL from ".";
 
-const STACK_OVERFLOW_BOUND = 10000000;
+const STACK_OVERFLOW_BOUND = 1000000;
 
 const range = (start: number, end: number): number[] => {
   const arr: number[] = [];
