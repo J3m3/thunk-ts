@@ -394,3 +394,13 @@ export const length = <T extends Thunk<unknown>>(xs: LazyList<T>): number => {
   }
   return length;
 };
+
+export const reversed = <T extends Thunk<unknown>>(xs: LazyList<T>): LazyList<T> => {
+  let result: LazyList<T> = () => null;
+  let node = xs();
+  while (node !== null) {
+    result = prepended(node.head, result);
+    node = node.rest();
+  }
+  return result;
+};
