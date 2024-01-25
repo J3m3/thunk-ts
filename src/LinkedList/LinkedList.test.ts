@@ -666,3 +666,47 @@ describe("length:", () => {
     expect(LL.length(xsss)).toEqual(length);
   });
 });
+
+describe("reversed:", () => {
+  it("should return the reversed version of the given list", () => {
+    const xs = LL.reversed(LL.fromArray(range(1, 10)));
+    const result = range(1, 10).reverse();
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should return empty list when an empty list is given", () => {
+    const xs = LL.reversed(LL.fromArray([]));
+    expect(LL.unsafeToArray(xs)).toEqual([]);
+  });
+  it("should return the same sequence when reversed twice", () => {
+    const xs = LL.reversed(LL.reversed(LL.fromArray(range(1, 10))));
+    const result = range(1, 10);
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should reverse the outermost layer of list when a nested list is given", () => {
+    const xs = LL.reversed(
+      LL.fromArray([
+        [[1], [2]],
+        [[3], [4]],
+      ]),
+    );
+    const result = [
+      [[3], [4]],
+      [[1], [2]],
+    ];
+    expect(LL.unsafeToArray(xs)).toEqual(result);
+  });
+  it("should not touch the original list", () => {
+    const xs = LL.fromArray(range(1, 10));
+    const ys = LL.reversed(xs);
+    expect(LL.unsafeToArray(xs)).toEqual(range(1, 10));
+    expect(LL.unsafeToArray(ys)).toEqual(range(1, 10).reverse());
+  });
+  it("should not meet stack overflow", () => {
+    const test = () => {
+      const length = STACK_OVERFLOW_BOUND;
+      const xs = LL.range(0, length);
+      return LL.reversed(xs);
+    };
+    expect(test).not.toThrow(RangeError);
+  });
+});
