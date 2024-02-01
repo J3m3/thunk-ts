@@ -46,7 +46,7 @@ npm i lazy-thunk
 > [!WARNING]
 > If you want to work with CJS modules, you should make sure that `module` field in `tsconfig.json` is set to `node16` or `nodenext` like below. (`module: commonjs` does not work properly with `lazy-thunk`, and [is even not recommended](https://www.typescriptlang.org/docs/handbook/modules/reference.html#commonjs))
 
-```json
+```jsonc
 {
   "compilerOptions": {
     "module": "node16"
